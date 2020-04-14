@@ -5,4 +5,4 @@ metadata:
   namespace: customer-demo
 type: Opaque
 data:
-  longlived_ticket: ### Enter your MapR Ticket base64 encoded
+  longlived_ticket: ### Enter your MapR Ticket base64 encoded.  echo -n $(cat /tmp/your-mapr-ticket-filelocation) | base64 -w 0

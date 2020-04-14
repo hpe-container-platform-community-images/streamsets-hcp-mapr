@@ -46,7 +46,7 @@ spec:
            - name: MAPR_CLUSTER
              value: "hcp.mapr.cluster"	##### <-----Enter you MapR Cluster Name
            - name: MAPR_CLDB_HOSTS
-             value: "10.1.0.195"		##### <-----Enter you MapR Cluster CLDB Nodes
+             value: "10.1.0.195"		##### <-----Enter you MapR Cluster CLDB Nodes.  ## execute the following command on controller : bdmapr maprcli node listcldbs 
            - name: MAPR_CONTAINER_USER
              value: "mapr"				##### <-----Enter you MapR Cluster User 
            - name: MAPR_CONTAINER_GROUP
