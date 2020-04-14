@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamset
+  namespace: customer-demo
+spec:
+  selector:
+    matchLabels:
+      app: streamset
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: streamset
+        tier: frontend
+    spec:
+     
+      containers:
+        - name: streamset
+          image: mkieboom/mapr-pacc-streamsets-docker:streamsets381_mapr610_mep600
+          ports:
+            - containerPort: 18630
+              name: streamset-port
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["SYS_ADMIN" , "SYS_RESOURCE"]    
+              
+#          command: ['sleep']
+#          args: ["99999"]
+          
+          command: ["/bin/sh","-c"]
+          args: ["sleep 2 && /opt/mapr/installer/docker/mapr-setup.sh container && sudo -E -u $SDC_USER $SDC_DIST/bin/streamsets dc"]
+              
+          volumeMounts:
+          - name: fuse
+            mountPath: "/dev/fuse"
+          
+          - name: maprticket-volume
+            mountPath: "/tmp/ticket/"
+            
+          - name: streamset-data
+            mountPath: "/data"
+            
+          env:  
+           - name: MAPR_CLUSTER
+             value: "hcp.mapr.cluster"	##### <-----Enter you MapR Cluster Name
+           - name: MAPR_CLDB_HOSTS
+             value: "10.1.0.195"		##### <-----Enter you MapR Cluster CLDB Nodes
+           - name: MAPR_CONTAINER_USER
+             value: "mapr"				##### <-----Enter you MapR Cluster User 
+           - name: MAPR_CONTAINER_GROUP
+             value: "mapr"				##### <-----Enter you MapR Cluster Users Group 
+           - name: MAPR_CONTAINER_UID
+             value: "5000"				##### <-----Enter you MapR User UID 
+           - name: MAPR_CONTAINER_GID
+             value: "5000"				##### <-----Enter you MapR User GID 
+           - name: MAPR_MOUNT_PATH
+             value: "/mapr"				##### <-----Global Namespace Path
+           - name: SDC_JAVA_OPTS
+             value: "-Dmaprlogin.password.enabled=true"
+           - name: MAPR_TICKETFILE_LOCATION
+             value: "/tmp/ticket/longlived_ticket"
+ 
+#      securityContext:
+#        runAsUser: 0
+ 
+      volumes:
+      - name: fuse
+        hostPath:
+          path: /dev/fuse
+          
+      - name: maprticket-volume
+        secret:
+          secretName: maprticket
+          
+      - name: streamset-data
+        hostPath:
+          path: /tmp
+          type: DirectoryOrCreate
+

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: maprticket
+  namespace: customer-demo
+type: Opaque
+data:
+  longlived_ticket: ### Enter your MapR Ticket base64 encoded

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: streamset
+  namespace: customer-demo
+  labels:
+    hpecp.hpe.com/hpecp-internal-gateway: "true"
+spec:
+  selector: 
+    app: streamset
+  ports:
+  - name: streamset
+    protocol: TCP
+    port: 18630
+    targetPort: 18630
+  type: NodePort
